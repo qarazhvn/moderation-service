@@ -1,0 +1,48 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: moderation-service-test
+  
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/test_db
+      database: test_db
+  
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: test-group
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+    producer:
+      acks: all
+
+kafka:
+  topics:
+    input: test-input-topic
+    output: test-output-topic
+
+enrichment:
+  service:
+    url: http://localhost:8081
+    timeout: 5000
+
+moderation:
+  rules:
+    working-hours-categories:
+      - BILLING
+      - COMPLAINT
+    working-hours-start: "09:00"
+    working-hours-end: "18:00"
+    allow-multiple-active-categories:
+      - GENERAL_INQUIRY
+    max-active-requests-per-category: 1
+    working-hours-check-enabled: true
+    active-requests-check-enabled: true
+
+logging:
+  level:
+    root: WARN
+    com.example.moderation: DEBUG

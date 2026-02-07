@@ -1,0 +1,82 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: moderation-service
+  
+  # MongoDB configuration
+  data:
+    mongodb:
+      uri: mongodb://mongodb:27017/moderation_db
+      database: moderation_db
+  
+  # Kafka configuration
+  kafka:
+    bootstrap-servers: kafka:9092
+    consumer:
+      group-id: moderation-service-group
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+    producer:
+      acks: all
+      retries: 3
+
+# Kafka topics
+kafka:
+  topics:
+    input: customer-requests-topic
+    output: moderation-results-topic
+
+# Enrichment Service configuration
+enrichment:
+  service:
+    url: http://service-2:8081
+    timeout: 5000
+
+# Moderation rules configuration
+moderation:
+  rules:
+    # Categories that require working hours check
+    working-hours-categories:
+      - BILLING
+      - COMPLAINT
+    # Working hours (09:00 - 18:00)
+    working-hours-start: "09:00"
+    working-hours-end: "18:00"
+    # Categories that allow multiple active requests
+    allow-multiple-active-categories:
+      - GENERAL_INQUIRY
+    # Max active requests per category
+    max-active-requests-per-category: 1
+    # Enable/disable rules
+    working-hours-check-enabled: true
+    active-requests-check-enabled: true
+
+# Logging configuration
+logging:
+  level:
+    root: INFO
+    com.example.moderation: DEBUG
+    org.springframework.kafka: INFO
+    org.springframework.data.mongodb: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+# Actuator endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+# OpenAPI/Swagger
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method

@@ -1,0 +1,16 @@
+# Игнорируемые файлы
+target/
+*.class
+*.jar
+*.war
+*.log
+.idea/
+*.iml
+.DS_Store
+.mvn/
+mvnw
+mvnw.cmd
+
+# Docker volumes
+mongodb_data/
+redis_data/
